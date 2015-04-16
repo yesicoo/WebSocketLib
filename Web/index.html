@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src="js/XqWS.js"></script>
+		<script type="text/javascript">
+		
+			XQWebSocket("localhost", 18001);
+			
+			RegisterItem("SB", function(data) {
+				document.getElementById("msg").innerHTML += data.yes + "</br>";
+			});
+			
+			function Send() {
+				var dataitem = {};
+				dataitem["Hah"] = "abcdefghijklmnopqrstuvwxyz";
+				dataitem["yes"] = "那又怎样";
+				SendMessage("Hello", dataitem);
+			}
+			
+		</script>
+	</head>
+
+	<body>
+		<button onclick="Send()">Test</button>
+		<div id="msg">
+
+		</div>
+	</body>
+
+</html>

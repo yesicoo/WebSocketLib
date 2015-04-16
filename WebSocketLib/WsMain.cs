@@ -12,6 +12,8 @@ namespace WebSocketLib
 {
     public class WsMain
     {
+        public delegate void LogHandler(string log);
+        public event LogHandler sendLog;
         ConcurrentDictionary<Guid, IWebSocketConnection> Wscs = new ConcurrentDictionary<Guid, IWebSocketConnection>();
         ConcurrentDictionary<string, Action<string, Guid, Dictionary<string, string>>> CommItems = new ConcurrentDictionary<string, Action<string, Guid, Dictionary<string, string>>>();
         WebSocketServer WSS = null;
@@ -38,12 +40,11 @@ namespace WebSocketLib
                   socket.OnBinary = (bs) => DoBinary(socket, bs);
                   socket.OnError = (e) => DoError(socket, e);
               });
-
         }
 
         private void DoError(IWebSocketConnection socket, Exception e)
         {
-            Console.WriteLine(e.Message);
+            sendLog("[WS]"+e.Message);
         }
 
         public bool RegisterCommItem(string CommKey, Action<string, Guid, Dictionary<string, string>> doAction)
@@ -65,10 +66,14 @@ namespace WebSocketLib
 
         private void DoMessage(IWebSocketConnection socket, string msg)
         {
-
             dynamic result = JsonConvert.DeserializeObject(msg);
-            string CommKey = result.CommKey;
-            Dictionary<string, string> KeyValues = result.KeyValue;
+            string CommKey = result["CommKey"];
+            var kvs = result["KeyValues"];
+            Dictionary<string, string> KeyValues = new Dictionary<string,string> ();
+            foreach (var kv in kvs)
+            {
+                KeyValues.Add(kv.Name.ToString(), kv.Value.ToString());
+            }
             Action<string, Guid, Dictionary<string, string>> doAction = null;
             if (CommItems.TryGetValue(CommKey, out doAction))
             {
@@ -76,7 +81,7 @@ namespace WebSocketLib
             }
             else
             {
-
+                sendLog("[WS]" + CommKey + "命令不存在");
             }
         }
 
@@ -103,7 +108,6 @@ namespace WebSocketLib
             else
             {
                 return false;
-
             }
         }
 
