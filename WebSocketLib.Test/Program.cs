@@ -25,14 +25,13 @@ namespace WebSocketLib.Test
         /// <summary>
         /// 回调响应方法
         /// </summary>
-        /// <param name="commKey">响应的注册命令</param>
+        /// <param name="commKey">返回响应的注册命令</param>
         /// <param name="guid">客户端ID</param>
         /// <param name="keyValues">客户端发送的数据</param>
-        private static void DoHello(string commKey, Guid guid, Dictionary<string, string> keyValues)
+        private static void DoHello(string replyKey, Guid guid, Dictionary<string, string> keyValues)
         {
-            Console.WriteLine(string.Format("CommKey:{0};Key1:{2}", commKey, keyValues["Hah"]));
-
-            //发送数据 guid：发送给客户端的ID；commKey：客户端响应的Key；keyValues发送的数据字典。
+            Console.WriteLine(string.Format("CommKey:{0};Key1:{1}", replyKey, keyValues.Count()));
+            wsMain.SendMessage(guid, replyKey, keyValues);
             wsMain.SendMessage(guid, "SB", keyValues);
         }
     }

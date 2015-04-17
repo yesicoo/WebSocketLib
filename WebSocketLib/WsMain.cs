@@ -68,6 +68,7 @@ namespace WebSocketLib
         {
             dynamic result = JsonConvert.DeserializeObject(msg);
             string CommKey = result["CommKey"];
+            string ReplyKey = result["ReplyKey"];
             var kvs = result["KeyValues"];
             Dictionary<string, string> KeyValues = new Dictionary<string,string> ();
             foreach (var kv in kvs)
@@ -77,7 +78,7 @@ namespace WebSocketLib
             Action<string, Guid, Dictionary<string, string>> doAction = null;
             if (CommItems.TryGetValue(CommKey, out doAction))
             {
-                new Thread(() => { doAction(CommKey, socket.ConnectionInfo.Id, KeyValues); }).Start();
+                new Thread(() => { doAction(ReplyKey, socket.ConnectionInfo.Id, KeyValues); }).Start();
             }
             else
             {
