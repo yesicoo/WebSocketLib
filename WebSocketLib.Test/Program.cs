@@ -19,7 +19,7 @@ namespace WebSocketLib.Test
 
         static void wsMain_sendLog(string log)
         {
-            Console.WriteLine(log);
+            Console.WriteLine(log); 
         }
 
         /// <summary>

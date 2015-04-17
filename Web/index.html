@@ -6,25 +6,39 @@
 		<title></title>
 		<script type="text/javascript" src="js/XqWS.js"></script>
 		<script type="text/javascript">
-		
+			// 创建连接，服务端IP地址，端口
 			XQWebSocket("localhost", 18001);
 			
+			// 注册消息，消息命令字符串，回调方法
 			RegisterItem("SB", function(data) {
 				document.getElementById("msg").innerHTML += data.yes + "</br>";
 			});
 			
+			function Post() {
+				var dataitem = {};
+				dataitem["Hah"] = "abcdefghijklmnopqrstuvwxyz";
+				dataitem["yes"] = "So What?";
+				// 发送数据方法  消息命令字符串，发送的数据
+				PostMessage("Hello", dataitem);
+			}
 			function Send() {
 				var dataitem = {};
 				dataitem["Hah"] = "abcdefghijklmnopqrstuvwxyz";
-				dataitem["yes"] = "那又怎样";
-				SendMessage("Hello", dataitem);
+				dataitem["yes"] = "So What?";
+				// 发送数据方法  消息命令字符串，发送的数据
+				var data=SendMessage("Hello", dataitem,function(data){
+					document.getElementById("msg").innerHTML += data.yes + "</br>";
+				});
+				
 			}
+			
 			
 		</script>
 	</head>
 
 	<body>
-		<button onclick="Send()">Test</button>
+		<button onclick="Post()">PostMsg</button>
+		<button onclick="Send()">SendMsg</button>
 		<div id="msg">
 
 		</div>
